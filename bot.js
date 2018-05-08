@@ -21,12 +21,12 @@ client.on('message', mes => {
 });
 
 async function insert_pay_info(mes) {
-	const db = await dbPromise;
 	const payInfo = mes.content.replace(/( |　)+/g, " ");
 	if (payInfo.split(" ").length != 2)
 		return;
-	let payItemName = payInfo.split(" ")[0];
-	let payItemPrice = parseInt(payInfo.split(" ")[1], 10);
+	const db = await dbPromise;
+	const payItemName = payInfo.split(" ")[0];
+	const payItemPrice = parseInt(payInfo.split(" ")[1], 10);
 	if (Number.isNaN(payItemPrice))
 		return;
 	db.run("INSERT INTO payment (name, price) VALUES (?, ?)", payItemName, payItemPrice);
