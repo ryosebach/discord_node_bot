@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const sqlite = require('sqlite');
 const dbPromise = sqlite.open('./db/payment.db', { Promise });
+require('dotenv').config();
 
 const token = process.env.DISCORD_TOKEN;
 
