@@ -22,13 +22,15 @@ client.on('message', mes => {
 
 async function insert_pay_info(mes) {
 	const payInfo = mes.content.replace(/( |　)+/g, " ");
-	if (payInfo.split(" ").length != 2)
-		return;
+	
+	if (payInfo.split(" ").length != 2) return;
+	
 	const db = await dbPromise;
 	const payItemName = payInfo.split(" ")[0];
 	const payItemPrice = parseInt(payInfo.split(" ")[1], 10);
-	if (Number.isNaN(payItemPrice))
-		return;
+
+	if (Number.isNaN(payItemPrice)) return;
+
 	db.run("INSERT INTO payment (name, price) VALUES (?, ?)", payItemName, payItemPrice);
 }
 
@@ -43,7 +45,7 @@ async function send_total_pay(mes) {
 	
 	let sql = "";
 	let durationToBeTotaled = "";
-	let priceSum = 0;
+	let totalPrice = 0;
 	if (arg == "day")  {
 		sql = "SELECT price FROM payment WHERE date > date('now')";
 		durationToBeTotaled = "今日";
@@ -57,9 +59,9 @@ async function send_total_pay(mes) {
 		return;
 	}
 	await db.each(sql, function(err, row) {
-		priceSum += row.price;		
+		totalPrice += row.price;		
 	});
-	mes.channel.send(`${durationToBeTotaled}は${priceSum}円使ってるにゃん`);
+	mes.channel.send(`${durationToBeTotaled}は${totalPrice}円使ってるにゃん`);
 	mes.delete();
 }
 
