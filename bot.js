@@ -15,18 +15,14 @@ client.on('ready', () => {
 
 client.on('message', mes => {
 	if (mes.channel.name == 'payment' && mes.author.username != 'Nyanko') {
-		console.log(mes.content);
-		
 		insert_pay_info(mes);
-		today_pay(mes);
-		week_pay(mes);
-		month_pay(mes);
+		send_total_pay(mes);
 	}
 });
 
 async function insert_pay_info(mes) {
 	const db = await dbPromise;
-	let payInfo = mes.content.replace(/( |　)+/g, " ");
+	const payInfo = mes.content.replace(/( |　)+/g, " ");
 	if (payInfo.split(" ").length != 2)
 		return;
 	let payItemName = payInfo.split(" ")[0];
@@ -36,40 +32,36 @@ async function insert_pay_info(mes) {
 	db.run("INSERT INTO payment (name, price) VALUES (?, ?)", payItemName, payItemPrice);
 }
 
-async function today_pay(mes) {
-	if(mes.content == "!pay today") {
-		const db = await dbPromise;
-		let today_use_price = 0;
-		await db.each("SELECT price FROM payment WHERE date > date('now')", function(err, row) {
-			today_use_price += row.price;
-		});
-		mes.channel.send(`今日は${today_use_price}円使ってるにゃん`);
-		mes.delete();
+async function send_total_pay(mes) {
+	const mesContent = mes.content.replace(/( |　)+/g, " ");
+	const command = mesContent.split(" ")[0];
+
+	if(command != "!pay") return;
+	
+	const db = await dbPromise;
+	const arg = mesContent.split(" ")[1];
+	
+	let sql = "";
+	let durationToBeTotaled = "";
+	let priceSum = 0;
+	if (arg == "day")  {
+		sql = "SELECT price FROM payment WHERE date > date('now')";
+		durationToBeTotaled = "今日";
+	} else if (arg == "week") {
+		sql = "SELECT price FROM payment WHERE strftime('%W', date) = strftime('%W', 'now')";
+		durationToBeTotaled = "今週";
+	} else if (arg == "month") {
+		sql = "SELECT price FROM payment WHERE strftime('%m', date) = strftime('%m', 'now')";
+		durationToBeTotaled = "今月";
+	} else {
+		return;
 	}
+	await db.each(sql, function(err, row) {
+		priceSum += row.price;		
+	});
+	mes.channel.send(`${durationToBeTotaled}は${priceSum}円使ってるにゃん`);
+	mes.delete();
 }
 
-async function week_pay(mes) {
-	if (mes.content == "!pay week") {
-		const db = await dbPromise;
-		let week_use_price = 0;
-		await db.each("SELECT price FROM payment WHERE strftime('%W', date) = strftime('%W', 'now')", function(err, row) {
-			week_use_price += row.price;
-		});
-		mes.channel.send(`今週は${week_use_price}円使ってるにゃん`);
-		mes.delete();
-	}
-}
-
-async function month_pay(mes) {
-	if (mes.content == "!pay month") {
-		const db = await dbPromise;
-		let month_use_price = 0;
-		await db.each("SELECT price FROM payment WHERE strftime('%m', date) = strftime('%m', 'now')", function(err, row) {
-			month_use_price += row.price;
-		});
-		mes.channel.send(`今月は${month_use_price}円使ってるにゃん`);
-		mes.delete();
-	}
-}
 
 client.login(token);
