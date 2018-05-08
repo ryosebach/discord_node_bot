@@ -24,6 +24,7 @@ client.on('message', mes => {
 });
 
 async function insert_pay_info(mes) {
+	const db = await dbPromise;
 	let payInfo = mes.content.replace(/( |　)+/g, " ");
 	if (payInfo.split(" ").length != 2)
 		return;
