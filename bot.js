@@ -20,6 +20,7 @@ client.on('message', mes => {
 		insert_pay_info(mes);
 		today_pay(mes);
 		week_pay(mes);
+		month_pay(mes);
 	}
 });
 
@@ -43,6 +44,7 @@ async function today_pay(mes) {
 			today_use_price += row.price;
 		});
 		mes.channel.send(`今日は${today_use_price}円使ってるにゃん`);
+		mes.delete();
 	}
 }
 
@@ -54,13 +56,19 @@ async function week_pay(mes) {
 			week_use_price += row.price;
 		});
 		mes.channel.send(`今週は${week_use_price}円使ってるにゃん`);
+		mes.delete();
 	}
 }
 
 async function month_pay(mes) {
 	if (mes.content == "!pay month") {
 		const db = await dbPromise;
-	let month_use_price = 0;
+		let month_use_price = 0;
+		await db.each("SELECT price FROM payment WHERE strftime('%m', date) = strftime('%m', 'now')", function(err, row) {
+			month_use_price += row.price;
+		});
+		mes.channel.send(`今月は${month_use_price}円使ってるにゃん`);
+		mes.delete();
 	}
 }
 
