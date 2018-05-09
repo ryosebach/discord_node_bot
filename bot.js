@@ -47,13 +47,13 @@ async function send_total_pay(mes) {
 	let durationToBeTotaled = "";
 	let totalPrice = 0;
 	if (arg == "day")  {
-		sql = "SELECT price FROM payment WHERE date > date('now')";
+		sql = "SELECT price FROM payment WHERE date(date, 'localtime') > date('now', 'localtime')";
 		durationToBeTotaled = "今日";
 	} else if (arg == "week") {
-		sql = "SELECT price FROM payment WHERE strftime('%W', date) = strftime('%W', 'now')";
+		sql = "SELECT price FROM payment WHERE strftime('%W', datetime(date, 'localtime')) = strftime('%W', datetime('now', 'localtime'))";
 		durationToBeTotaled = "今週";
 	} else if (arg == "month") {
-		sql = "SELECT price FROM payment WHERE strftime('%m', date) = strftime('%m', 'now')";
+		sql = "SELECT price FROM payment WHERE strftime('%m', datetime(date, 'localtime')) = strftime('%m', datetime('now', 'localtime'))";
 		durationToBeTotaled = "今月";
 	} else {
 		return;
