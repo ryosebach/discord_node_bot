@@ -46,8 +46,8 @@ async function send_total_pay(mes) {
 	let sql = "";
 	let durationToBeTotaled = "";
 	let totalPrice = 0;
-	if (arg == "day")  {
-		sql = "SELECT price FROM payment WHERE date(date, 'localtime') > date('now', 'localtime')";
+	if (arg == "day" || arg == "today")  {
+		sql = "SELECT price FROM payment WHERE date(date, 'localtime') >= date('now', 'localtime')";
 		durationToBeTotaled = "今日";
 	} else if (arg == "week") {
 		sql = "SELECT price FROM payment WHERE strftime('%W', datetime(date, 'localtime')) = strftime('%W', datetime('now', 'localtime'))";
