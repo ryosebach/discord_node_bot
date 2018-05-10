@@ -58,9 +58,10 @@ const send_total_pay = async (mes) => {
 	} else {
 		return;
 	}
-	await db.each(sql, function(err, row) {
-		totalPrice += row.price;		
-	});
+	const rows = await db.all(sql);
+	for (const val of rows) {
+		totalPrice += val.price;
+	}
 	mes.channel.send(`${durationToBeTotaled}は${totalPrice}円使ってるにゃん`);
 	mes.delete();
 }
