@@ -20,7 +20,7 @@ client.on('message', mes => {
 	}
 });
 
-async function insert_pay_info(mes) {
+const insert_pay_info = async (mes) => {
 	const payInfo = mes.content.replace(/( |　)+/g, " ");
 	
 	if (payInfo.split(" ").length != 2) return;
@@ -34,7 +34,7 @@ async function insert_pay_info(mes) {
 	db.run("INSERT INTO payment (name, price) VALUES (?, ?)", payItemName, payItemPrice);
 }
 
-async function send_total_pay(mes) {
+const send_total_pay = async (mes) => {
 	const mesContent = mes.content.replace(/( |　)+/g, " ");
 	const command = mesContent.split(" ")[0];
 
@@ -58,9 +58,10 @@ async function send_total_pay(mes) {
 	} else {
 		return;
 	}
-	await db.each(sql, function(err, row) {
-		totalPrice += row.price;		
-	});
+	const rows = await db.all(sql);
+	for (const val of rows) {
+		totalPrice += val.price;
+	}
 	mes.channel.send(`${durationToBeTotaled}は${totalPrice}円使ってるにゃん`);
 	mes.delete();
 }
