@@ -31,7 +31,7 @@ const insert_pay_info = async (mes) => {
 
 	if (Number.isNaN(payItemPrice)) return;
 
-	db.run("INSERT INTO payment (name, price) VALUES (?, ?)", payItemName, payItemPrice);
+	await db.run("INSERT INTO payment (name, price) VALUES (?, ?)", payItemName, payItemPrice);
 }
 
 const send_total_pay = async (mes) => {
