@@ -62,6 +62,11 @@ const send_total_pay = async (mes) => {
 	for (const val of rows) {
 		totalPrice += val.price;
 	}
+	const messages = await mes.channel.fetchMessages({ limit: 10 });
+	for (const val of messages.array()) {
+		if (val.author.username != "Nyanko") continue;
+		val.delete();
+	}
 	mes.channel.send(`${durationToBeTotaled}は${totalPrice}円使ってるにゃん`);
 	mes.delete();
 }
