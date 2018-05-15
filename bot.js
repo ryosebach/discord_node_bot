@@ -1,15 +1,17 @@
 const Discord = require('discord.js');
 const sqlite = require('sqlite');
 const dbPromise = sqlite.open('./db/payment.db', { Promise });
+const CronJob = require('cron').CronJob;
 require('dotenv').config();
 
 const token = process.env.DISCORD_TOKEN;
 
 
 const client = new Discord.Client();
+let payment_channel;
 
-client.on('ready', () => {
-
+client.on('ready', async () => {
+	payment_channel = await client.channels.find(val => val.name == "payment");
 });
 
 
@@ -19,6 +21,15 @@ client.on('message', mes => {
 		send_total_pay(mes);
 	}
 });
+
+const daily_pay_sent_job = new CronJob('50 59 23 * * *', async () => {
+		const sql = "SELECT price FROM payment WHERE date(date, 'localtime') >= date('now', 'localtime')";
+		const durationToBeTotaled = "今日"
+		send_total_pay_to_channel(payment_channel, sql, durationToBeTotaled);
+	},
+	true,
+	"Asia/Tokyo"
+);
 
 const insert_pay_info = async (mes) => {
 	const payInfo = mes.content.replace(/( |　)+/g, " ");
@@ -71,5 +82,14 @@ const send_total_pay = async (mes) => {
 	mes.delete();
 }
 
+const send_total_pay_to_channel = async (channel, sql, durationToBeTotaled) => {
+	const db = await dbPromise;
+	let totalPrice = 0;
+	const rows = await db.all(sql);
+	for (const val of rows) {
+		totalPrice += val.price;
+	}
+	channel.send(`${durationToBeTotaled}は${totalPrice}円使ったにゃん`);
+}
 
 client.login(token);
