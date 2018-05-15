@@ -31,6 +31,24 @@ const daily_pay_sent_job = new CronJob('50 59 23 * * *', async () => {
 	"Asia/Tokyo"
 );
 
+const weekly_pay_sent_job = new CronJob('45 59 23 * * 0', async () => {
+		const sql = "SELECT price FROM payment WHERE strftime('%W', datetime(date, 'localtime')) = strftime('%W', datetime('now', 'localtime'))";
+		const durationToBeTotaled = "今週";
+		send_total_pay_to_channel(payment_channel, sql, durationToBeTotaled);
+	},
+	true,
+	"Asia/Tokyo"
+);
+
+const monthly_pay_sent_job = new CronJob('00 00 00 1 * *', async () => {
+		sql = "SELECT price FROM payment WHERE strftime('%m', datetime(date, 'localtime')) = strftime('%m', datetime('now', '-1 day', 'localtime'))";
+		durationToBeTotaled = "今月";
+		send_total_pay_to_channel(payment_channel, sql, durationToBeTotaled);
+	},
+	true,
+	"Asia/Tokyo"
+);
+
 const insert_pay_info = async (mes) => {
 	const payInfo = mes.content.replace(/( |　)+/g, " ");
 	
