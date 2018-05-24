@@ -1,17 +1,20 @@
 const Discord = require('discord.js');
 const sqlite = require('sqlite');
 const dbPromise = sqlite.open('./db/payment.db', { Promise });
-const CronJob = require('cron').CronJob;
 require('dotenv').config();
+const cron = require('./cron.js');
 
 const token = process.env.DISCORD_TOKEN;
 
 
 const client = new Discord.Client();
+module.exports.client = client;
 let payment_channel;
+
 
 client.on('ready', async () => {
 	payment_channel = await client.channels.find(val => val.name == "payment");
+	module.exports.payment_channel = payment_channel;
 });
 
 
@@ -22,32 +25,10 @@ client.on('message', mes => {
 	}
 });
 
-const daily_pay_sent_job = new CronJob('50 59 23 * * *', () => {
-		const sql = "SELECT price FROM payment WHERE date(date, 'localtime') >= date('now', 'localtime')";
-		const durationToBeTotaled = "今日"
-		send_total_pay_to_channel(payment_channel, sql, durationToBeTotaled);
-	},
-	true,
-	"Asia/Tokyo"
-);
+cron.daily_pay_sent_job.start();
+cron.weekly_pay_sent_job.start();
+cron.monthly_pay_sent_job.start();
 
-const weekly_pay_sent_job = new CronJob('45 59 23 * * 0', () => {
-		const sql = "SELECT price FROM payment WHERE strftime('%W', datetime(date, 'localtime')) = strftime('%W', datetime('now', 'localtime'))";
-		const durationToBeTotaled = "今週";
-		send_total_pay_to_channel(payment_channel, sql, durationToBeTotaled);
-	},
-	true,
-	"Asia/Tokyo"
-);
-
-const monthly_pay_sent_job = new CronJob('00 00 00 1 * *', () => {
-		sql = "SELECT price FROM payment WHERE strftime('%m', datetime(date, 'localtime')) = strftime('%m', datetime('now', '-1 day', 'localtime'))";
-		durationToBeTotaled = "今月";
-		send_total_pay_to_channel(payment_channel, sql, durationToBeTotaled);
-	},
-	true,
-	"Asia/Tokyo"
-);
 
 const insert_pay_info = async (mes) => {
 	const payInfo = mes.content.replace(/( |　)+/g, " ");
@@ -109,5 +90,7 @@ const send_total_pay_to_channel = async (channel, sql, durationToBeTotaled) => {
 	}
 	channel.send(`${durationToBeTotaled}は${totalPrice}円使ったにゃん`);
 }
+module.exports.send_total_pay_to_channel = send_total_pay_to_channel;
+
 
 client.login(token);
