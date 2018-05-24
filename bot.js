@@ -88,6 +88,7 @@ const clear_pay_info = async (channel) => {
 		val.delete();
 	}
 }
+module.exports.clear_pay_info = clear_pay_info;
 
 const send_total_pay_to_channel = async (channel, sql, durationToBeTotaled) => {
 	const db = await dbPromise;
