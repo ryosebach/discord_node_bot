@@ -65,6 +65,10 @@ const send_total_pay = async (mes) => {
 	} else if (arg == "month") {
 		sql = "SELECT price FROM payment WHERE strftime('%m', datetime(date, 'localtime')) = strftime('%m', datetime('now', 'localtime'))";
 		durationToBeTotaled = "今月";
+	} else if (arg == "clear") {
+		clear_pay_info(mes.channel);
+		mes.delete();
+		return;
 	} else {
 		return;
 	}
@@ -72,13 +76,17 @@ const send_total_pay = async (mes) => {
 	for (const val of rows) {
 		totalPrice += val.price;
 	}
-	const messages = await mes.channel.fetchMessages({ limit: 10 });
+	clear_pay_info(mes.channel);
+	mes.channel.send(`${durationToBeTotaled}は${totalPrice}円使ってるにゃん`);
+	mes.delete();
+}
+
+const clear_pay_info = async (channel) => {
+	const messages = await channel.fetchMessages({ limit: 10});
 	for (const val of messages.array()) {
 		if (val.author.username != "Nyanko") continue;
 		val.delete();
 	}
-	mes.channel.send(`${durationToBeTotaled}は${totalPrice}円使ってるにゃん`);
-	mes.delete();
 }
 
 const send_total_pay_to_channel = async (channel, sql, durationToBeTotaled) => {
