@@ -14,11 +14,10 @@ const daily_pay_sent_job = new CronJob('50 59 23 * * *', () => {
 	"Asia/Tokyo"
 );
 
-const weekly_pay_sent_job = new CronJob('45 59 23 * * 0', () => {
+const weekly_pay_sent_job = new CronJob('55 59 23 * * 0', () => {
 		const sql = "SELECT price FROM payment WHERE strftime('%W', datetime(date, 'localtime')) = strftime('%W', datetime('now', 'localtime'))";
 		const durationToBeTotaled = "今週";
 		bot.send_total_pay_to_channel(bot.payment_channel, sql, durationToBeTotaled);
-		bot.clear_pay_info(bot.payment_channel);
 	},
 	true,
 	"Asia/Tokyo"
@@ -28,7 +27,6 @@ const monthly_pay_sent_job = new CronJob('00 00 00 1 * *', () => {
 		const sql = "SELECT price FROM payment WHERE strftime('%m', datetime(date, 'localtime')) = strftime('%m', datetime('now', '-1 day', 'localtime'))";
 		const durationToBeTotaled = "今月";
 		bot.send_total_pay_to_channel(bot.payment_channel, sql, durationToBeTotaled);
-		bot.clear_pay_info(bot.payment_channel);
 	},
 	true,
 	"Asia/Tokyo"
