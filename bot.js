@@ -3,6 +3,7 @@ const sqlite = require('sqlite');
 const dbPromise = sqlite.open('./db/payment.db', { Promise });
 require('dotenv').config();
 const cron = require('./cron.js');
+const moment = require('moment');
 
 const token = process.env.DISCORD_TOKEN;
 
@@ -21,7 +22,7 @@ client.on('ready', async () => {
 client.on('message', mes => {
 	if (mes.channel.name == 'payment' && mes.author.username != 'Nyanko') {
 		insert_pay_info(mes);
-		send_total_pay(mes);
+		total_pay(mes);
 	}
 });
 
@@ -32,19 +33,44 @@ cron.monthly_pay_sent_job.start();
 
 const insert_pay_info = async (mes) => {
 	const payInfo = mes.content.replace(/( |　)+/g, " ");
+	const payInfos = payInfo.split(" ");
+
+	if (payInfos.length < 2 || payInfos[0] == "!pay") return;
 	
-	if (payInfo.split(" ").length != 2) return;
+
 	
 	const db = await dbPromise;
-	const payItemName = payInfo.split(" ")[0];
-	const payItemPrice = parseInt(payInfo.split(" ")[1], 10);
+	const payItemName = payInfos[0];
+	const payItemPrice = parseInt(payInfos[1], 10);
+	const paymentDayInfo = payInfos[2];
+	if(paymentDayInfo) {
+		insert_before_pay_info(db, payItemName, payItemPrice, paymentDayInfo);
+		return;
+	}
+
 
 	if (Number.isNaN(payItemPrice)) return;
 
 	await db.run("INSERT INTO payment (name, price) VALUES (?, ?)", payItemName, payItemPrice);
 }
 
-const send_total_pay = async (mes) => {
+
+const insert_before_pay_info = async (db, payItemName, payItemPrice, paymentDayInfo) => {
+	if(paymentDayInfo == "昨日") {
+		await db.run("INSERT INTO payment (name, price, date) VALUES(?, ?, ?)", payItemName, payItemPrice, moment().subtract(1, 'days').format("YYYY-MM-DD HH:m:s"));
+		return;
+	}
+	if(paymentDayInfo.match(/^-\d+h$/)) {
+		await db.run("INSERT INTO payment (name, price, date) VALUES(?, ?, ?)", payItemName, payItemPrice, moment().subtract(paymentDayInfo.match(/\d+/g)[0], 'hours').format("YYYY-MM-DD HH:m:s"));
+		return;
+	}
+	if(paymentDayInfo.match(/^-\d+d$/)) {
+		await db.run("INSERT INTO payment (name, price, date) VALUES(?, ?, ?)", payItemName, payItemPrice, moment().subtract(paymentDayInfo.match(/\d+/g)[0], 'days').format("YYYY-MM-DD HH:m:s"));
+		return;
+	}
+}
+
+const total_pay = async (mes) => {
 	const mesContent = mes.content.replace(/( |　)+/g, " ");
 	const command = mesContent.split(" ")[0];
 
