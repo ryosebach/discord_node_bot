@@ -50,7 +50,6 @@ const send_total_pay = async (mes) => {
 
 	if(command != "!pay") return;
 	
-	const db = await dbPromise;
 	const arg = mesContent.split(" ")[1];
 	
 	let sql = "";
@@ -72,12 +71,8 @@ const send_total_pay = async (mes) => {
 	} else {
 		return;
 	}
-	const rows = await db.all(sql);
-	for (const val of rows) {
-		totalPrice += val.price;
-	}
 	clear_pay_info(mes.channel);
-	mes.channel.send(`${durationToBeTotaled}は${totalPrice}円使ってるにゃん`);
+	send_total_pay_to_channel(payment_channel, sql, durationToBeTotaled, "使ってる");
 	mes.delete();
 }
 
@@ -90,14 +85,14 @@ const clear_pay_info = async (channel) => {
 }
 module.exports.clear_pay_info = clear_pay_info;
 
-const send_total_pay_to_channel = async (channel, sql, durationToBeTotaled) => {
+const send_total_pay_to_channel = async (channel, sql, durationToBeTotaled,  word) => {
 	const db = await dbPromise;
 	let totalPrice = 0;
 	const rows = await db.all(sql);
 	for (const val of rows) {
 		totalPrice += val.price;
 	}
-	channel.send(`${durationToBeTotaled}は${totalPrice}円使ったにゃん`);
+	channel.send(`${durationToBeTotaled}は${totalPrice}円${word}にゃん`);
 }
 module.exports.send_total_pay_to_channel = send_total_pay_to_channel;
 
