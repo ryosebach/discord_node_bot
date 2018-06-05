@@ -43,15 +43,13 @@ const insert_pay_info = async (mes) => {
 	const payItemName = payInfos[0];
 	const payItemPrice = parseInt(payInfos[1], 10);
 	const paymentDayInfo = payInfos[2];
-	if(paymentDayInfo) {
-		insert_before_pay_info(db, payItemName, payItemPrice, paymentDayInfo);
-		return;
-	}
-
 
 	if (Number.isNaN(payItemPrice)) return;
-
-	await db.run("INSERT INTO payment (name, price) VALUES (?, ?)", payItemName, payItemPrice);
+	
+	if(paymentDayInfo) 
+		insert_before_pay_info(db, payItemName, payItemPrice, paymentDayInfo);
+	else
+		await db.run("INSERT INTO payment (name, price) VALUES (?, ?)", payItemName, payItemPrice);
 }
 
 
