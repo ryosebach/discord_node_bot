@@ -55,15 +55,15 @@ const insert_pay_info = async (mes) => {
 
 const insert_before_pay_info = async (db, payItemName, payItemPrice, paymentDayInfo) => {
 	if(paymentDayInfo == "昨日") {
-		await db.run("INSERT INTO payment (name, price, date) VALUES(?, ?, ?)", payItemName, payItemPrice, moment().subtract(1, 'days').format("YYYY-MM-DD HH:m:s"));
+		await db.run("INSERT INTO payment (name, price, date) VALUES(?, ?, ?)", payItemName, payItemPrice, moment.utc().subtract(1, 'days').format("YYYY-MM-DD HH:mm:ss"));
 		return;
 	}
 	if(paymentDayInfo.match(/^-\d+h$/)) {
-		await db.run("INSERT INTO payment (name, price, date) VALUES(?, ?, ?)", payItemName, payItemPrice, moment().subtract(paymentDayInfo.match(/\d+/g)[0], 'hours').format("YYYY-MM-DD HH:m:s"));
+		await db.run("INSERT INTO payment (name, price, date) VALUES(?, ?, ?)", payItemName, payItemPrice, moment.utc().subtract(paymentDayInfo.match(/\d+/g)[0], 'hours').format("YYYY-MM-DD HH:mm:ss"));
 		return;
 	}
 	if(paymentDayInfo.match(/^-\d+d$/)) {
-		await db.run("INSERT INTO payment (name, price, date) VALUES(?, ?, ?)", payItemName, payItemPrice, moment().subtract(paymentDayInfo.match(/\d+/g)[0], 'days').format("YYYY-MM-DD HH:m:s"));
+		await db.run("INSERT INTO payment (name, price, date) VALUES(?, ?, ?)", payItemName, payItemPrice, moment.utc().subtract(paymentDayInfo.match(/\d+/g)[0], 'days').format("YYYY-MM-DD HH:mm:ss"));
 		return;
 	}
 }
