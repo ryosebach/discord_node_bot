@@ -1,7 +1,8 @@
 const CronJob = require('cron').CronJob;
 const Discord = require('discord.js'); 
 const bot = require('./bot.js');
-
+const fs = require('fs');
+const moment = require('moment');
 
 const daily_pay_sent_job = new CronJob('50 59 23 * * *', () => {
 		const sql = "SELECT price FROM payment WHERE date(date, 'localtime') >= date('now', 'localtime')";
@@ -32,6 +33,15 @@ const monthly_pay_sent_job = new CronJob('00 00 00 1 * *', () => {
 	"Asia/Tokyo"
 );
 
+const backup_database = new CronJob('45 59 23 * * *', () => {
+		fs.copyFile("./db/payment.db", "db/backup/" + moment().format("YYMMDD-HHmmss") + "payment.db", () => {console.log("Backup Err")});
+	},
+	null,
+	false,
+	"Asia/Tokyo"
+)
+
 module.exports.daily_pay_sent_job = daily_pay_sent_job;
 module.exports.weekly_pay_sent_job = weekly_pay_sent_job;
 module.exports.monthly_pay_sent_job = monthly_pay_sent_job;
+module.exports.backup_database = backup_database;
