@@ -5,6 +5,7 @@
  */
 import * as dotenv from 'dotenv';
 import * as log4js from 'log4js';
+import * as path from 'path';
 
 import Utils from 'server/app/utils/util';
 
@@ -13,8 +14,9 @@ import Utils from 'server/app/utils/util';
  */
 export default class Config {
     static DISCORD_TOKEN: string;
-
+    static ROOT_DIR: string;
     static init(): void {
+        Config.ROOT_DIR = path.resolve(`${__dirname}/../../../..`);
         dotenv.config();
         Config.DISCORD_TOKEN = Utils.stringToDefault(process.env.DISCORD_TOKEN);
         log4js.configure({
