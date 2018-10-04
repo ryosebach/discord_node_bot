@@ -25,4 +25,8 @@ export const route = (mes: Message): void => {
     if (command === '!rc' || command === '📡') {
         bot.sendRainCloudGif(mes);
     }
+
+    if (command === '!train') {
+        bot.sendKantoTrainInfo(mes);
+    }
 };

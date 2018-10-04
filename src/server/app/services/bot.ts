@@ -38,3 +38,11 @@ export const sendRainCloudGif = async (mes: Message): Promise<void> => {
     await mes.delete();
     await mes.channel.send('', attachment);
 };
+
+export const sendKantoTrainInfo = async (mes: Message): Promise<void> => {
+    await clearBotMessage(mes.channel as TextChannel);
+    const buffer = await Puppeteer.screenshotDOMElement('https://transit.yahoo.co.jp/traininfo/area/4/', 'div #mdStatusTroubleLine', 5);
+    const attachment = new Attachment(buffer, 'weather.png');
+    await mes.delete();
+    await mes.channel.send('', attachment);
+};
