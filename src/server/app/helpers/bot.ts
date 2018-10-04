@@ -6,11 +6,11 @@
 import {Channel, Message, TextChannel} from 'discord.js';
 
 import * as bot_controller from 'server/app/controllers/bot';
-import discord_bot from 'server/app/middleware/discord_bot';
+import DiscordBot from 'server/app/middleware/discordBot';
 
 export const ready = async (): Promise<void> => {
-    const client = discord_bot.client;
-    discord_bot.paymentChannel = (await client.channels.find((channel: Channel) => (channel as TextChannel).name === 'payment') as TextChannel);
+    DiscordBot.paymentChannel = await DiscordBot.findChannel('payment');
+    DiscordBot.newsChannel = await DiscordBot.findChannel('news');
 };
 
 export const message = async (mes: Message): Promise<void> => {

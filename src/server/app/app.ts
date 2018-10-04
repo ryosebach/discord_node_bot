@@ -5,7 +5,7 @@
  */
 import Config from 'server/app/config/config';
 import * as bot_helper from 'server/app/helpers/bot';
-import DiscordBot from 'server/app/middleware/discord_bot';
+import DiscordBot from 'server/app/middleware/discordBot';
 import Puppeteer from 'server/app/middleware/puppeteer';
 
 Config.init();
