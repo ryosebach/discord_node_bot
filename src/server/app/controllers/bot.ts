@@ -18,11 +18,11 @@ export const route = (mes: Message): void => {
         return;
     }
 
-    if (command === '!pay' && channel.name === 'payment') {
-        bot.total_pay(mes);
+    if (command === '!weather' || command === '⛅') {
+        bot.sendWeatherInfo(mes);
     }
 
-    if (command === '!weather') {
-        bot.weather(mes);
+    if (command === '!rc' || command === '📡') {
+        bot.sendRainCloudGif(mes);
     }
 };
