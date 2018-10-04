@@ -7,7 +7,7 @@ import {Attachment, Message, TextChannel} from 'discord.js';
 import * as log4js from 'log4js';
 
 // import bot from 'server/app/middleware/discord_bot';
-import Util from 'server/app/utils/util';
+import Puppeteer from 'server/app/middleware/puppeteer';
 
 const logger = log4js.getLogger('console');
 
@@ -78,7 +78,7 @@ const clear_bot_message = async (channel: TextChannel): Promise<void> => {
 
 export const weather = async (mes: Message): Promise<void> => {
     await clear_bot_message(mes.channel as TextChannel);
-    const buffer = await Util.screenshotDOMElement('https://weather.yahoo.co.jp/weather/jp/13/4410.html', 'div .forecastCity', 2);
+    const buffer = await Puppeteer.screenshotDOMElement('https://weather.yahoo.co.jp/weather/jp/13/4410.html', 'div .forecastCity', 2);
     const attachment = new Attachment(buffer, 'weather.png');
     await mes.channel.send('', attachment);
     await mes.delete();

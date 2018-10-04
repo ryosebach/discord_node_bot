@@ -9,7 +9,6 @@ import * as log4js from 'log4js';
 const logger = log4js.getLogger('console');
 
 import * as bot from 'server/app/services/bot';
-import Util from 'server/app/utils/util';
 
 export const route = (mes: Message): void => {
     logger.info('rout');
