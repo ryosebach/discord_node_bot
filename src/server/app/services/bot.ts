@@ -81,5 +81,5 @@ export const weather = async (mes: Message): Promise<void> => {
     const buffer = await Util.screenshotDOMElement('https://weather.yahoo.co.jp/weather/jp/13/4410.html', 'div .forecastCity', 2);
     const attachment = new Attachment(buffer, 'weather.png');
     await mes.channel.send('', attachment);
-    mes.delete();
+    await mes.delete();
 };

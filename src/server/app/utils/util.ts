@@ -4,6 +4,7 @@
  * (c) 2018 ryosebach
  */
 import * as puppeteer from 'puppeteer';
+import Puppeteer from 'server/app/middleware/puppeteer';
 
 export default class Utils {
     static stringToDefault = (val: string | undefined): string  => {
@@ -15,15 +16,7 @@ export default class Utils {
     }
 
     static screenshotDOMElement = async (url: string, selector: string, padding: number): Promise<Buffer> => {
-        const browser = await puppeteer.launch({
-            args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox'
-            ]
-        });
-        const page = await browser.newPage();
-
-        await page.setViewport({width: 1000, height: 600, deviceScaleFactor: 2});
+        const page = Puppeteer.page;
         await page.goto(url, {waitUntil: 'networkidle2'});
 
         const rect = await page.evaluate((sel: string) => {
