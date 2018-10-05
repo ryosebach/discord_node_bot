@@ -8,7 +8,7 @@ import * as log4js from 'log4js';
 
 import Puppeteer from 'server/app/middleware/puppeteer';
 import * as cheerio from 'server/app/services/cheerio';
-import * as yahooWeather from 'server/app/utils/yahooWeather';
+import * as yahooWeather from 'server/app/utils/yahooServices';
 
 const logger = log4js.getLogger('console');
 
