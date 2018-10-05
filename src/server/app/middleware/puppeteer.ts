@@ -3,7 +3,10 @@
  *
  * (c) 2018 ryosebach
  */
+import * as path from 'path';
 import * as puppeteer from 'puppeteer';
+
+import Config from 'server/app/config/config';
 
 export default class Puppeteer {
     static page: puppeteer.Page;
@@ -30,7 +33,7 @@ export default class Puppeteer {
         }, selector);
 
         return Puppeteer.page.screenshot({
-            path: 'element.png',
+            path: path.join(Config.ROOT_DIR, 'images', 'element.png'),
             clip: {
                 x: rect.left - padding,
                 y: rect.top - padding,
