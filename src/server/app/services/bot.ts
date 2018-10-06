@@ -13,6 +13,13 @@ import * as yahooWeather from 'server/app/utils/yahooServices';
 
 const logger = log4js.getLogger('console');
 
+export const sendHealth = async (mes: Message): Promise<void> => {
+    mes.delete();
+    mes.channel.send('Runnning');
+    await new Promise((r: () => void) => setTimeout(r, 3000));
+    clearBotMessage(mes.channel as TextChannel, null, 'Runnning');
+};
+
 const clearBotMessage = async (channel: TextChannel, name?: string, content?: string): Promise<void> => {
     const messages = await channel.fetchMessages({ limit: 10});
     for (const val of messages.array()) {

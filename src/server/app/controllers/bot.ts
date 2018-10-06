@@ -15,6 +15,10 @@ export const route = (mes: Message): void => {
         return;
     }
 
+    if (command === '!health') {
+        bot.sendHealth(mes);
+    }
+
     if (command === '!weather' || command === '⛅') {
         bot.sendWeatherInfo(mes);
     }
