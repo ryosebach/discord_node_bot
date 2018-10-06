@@ -13,11 +13,12 @@ import * as yahooWeather from 'server/app/utils/yahooServices';
 
 const logger = log4js.getLogger('console');
 
-const clearBotMessage = async (channel: TextChannel, name?: string): Promise<void> => {
+const clearBotMessage = async (channel: TextChannel, name?: string, content?: string): Promise<void> => {
     const messages = await channel.fetchMessages({ limit: 10});
     for (const val of messages.array()) {
         if (val.author.username !== 'Nyanko' ||
-            (name && !val.attachments.first().filename.match(new RegExp(`${name}`)))) {
+            (name && !val.attachments.first().filename.match(new RegExp(`${name}`))) ||
+            (content && !val.content.match(new RegExp(content)))) {
             continue;
         }
         val.delete();
