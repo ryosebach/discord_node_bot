@@ -9,7 +9,8 @@ import * as bot from 'server/app/services/bot';
 
 export const route = (mes: Message): void => {
     const mesContent = mes.content.replace(/( |　)+/g, ' ');
-    const command = mesContent.split(' ')[0];
+    const args = mesContent.split(' ');
+    const command = args[0];
     if (mes.author.username === 'Nyanko') {
         return;
     }
@@ -22,7 +23,11 @@ export const route = (mes: Message): void => {
         bot.sendRainCloudGif(mes);
     }
 
-    if (command === '!train') {
-        bot.sendKantoTrainInfo(mes);
+    if (command === '!train' || command === '!tr') {
+        if (args[1] && args[1] === 'all') {
+            bot.sendKantoTrainInfo(mes);
+        } else {
+            bot.sendMyTrainInfo(mes);
+        }
     }
 };
