@@ -17,6 +17,7 @@ export interface TrainInfo {
     paddingLeft: number;
     paddingRight: number;
     paddingBottom: number;
+    delete_selector?: string;
 }
 
 export const trainInfos: TrainInfo[] = [
@@ -28,7 +29,8 @@ export const trainInfos: TrainInfo[] = [
         paddingTop: 80,
         paddingLeft: 5,
         paddingRight: 5,
-        paddingBottom: 5
+        paddingBottom: 400,
+        delete_selector: 'div .pos-im'
     },
     {
         route_name: 'tokyu_meguro',
@@ -38,7 +40,8 @@ export const trainInfos: TrainInfo[] = [
         paddingTop: 80,
         paddingLeft: 5,
         paddingRight: 5,
-        paddingBottom: 5
+        paddingBottom: 400,
+        delete_selector: 'div .pos-im'
     },
     {
         route_name: 'seibu_shinjuku',
@@ -48,6 +51,7 @@ export const trainInfos: TrainInfo[] = [
         paddingTop: 80,
         paddingLeft: 5,
         paddingRight: 5,
-        paddingBottom: 5
+        paddingBottom: 400,
+        delete_selector: 'div .pos-im'
     }
 ];

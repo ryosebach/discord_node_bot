@@ -43,7 +43,7 @@ export default class Puppeteer {
         });
     }
 
-    static screenshotDOMElemtntWithPaddings = async (url: string, selector: string, paddingTop: number, paddingLeft: number, paddingBottom: number, paddingRight: number): Promise<Buffer> => {
+    static screenshotDOMElemtntWithPaddings = async (url: string, selector: string, paddingTop: number, paddingLeft: number, paddingBottom: number, paddingRight: number, delete_selector?: string): Promise<Buffer> => {
         await Puppeteer.page.goto(url, {waitUntil: 'networkidle2'});
 
         const rect = await Puppeteer.page.evaluate((sel: string) => {
@@ -51,6 +51,15 @@ export default class Puppeteer {
             const {top, left, width, height} = element.getBoundingClientRect();
             return {left, top, width, height, id: element.id};
         }, selector);
+
+        if (delete_selector) {
+            await Puppeteer.page.evaluate((sel: string) => {
+                const elements = document.querySelectorAll(sel);
+                for (const element of elements) {
+                    element.parentNode.removeChild(element);
+                }
+            }, delete_selector);
+        }
 
         return Puppeteer.page.screenshot({
             path: path.join(Config.ROOT_DIR, 'images', 'element.png'),

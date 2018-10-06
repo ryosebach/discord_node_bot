@@ -63,7 +63,7 @@ export const sendMyTrainInfo = async (mes: Message): Promise<void> => {
     await clearBotMessage(mes.channel as TextChannel, 'train_info');
     mes.delete();
     for (const info of yahooWeather.trainInfos) {
-        const buffer = await Puppeteer.screenshotDOMElemtntWithPaddings(info.url, info.selector, info.paddingTop, info.paddingLeft, info.paddingBottom, info.paddingRight);
+        const buffer = await Puppeteer.screenshotDOMElemtntWithPaddings(info.url, info.selector, info.paddingTop, info.paddingLeft, info.paddingBottom, info.paddingRight, info.delete_selector);
         const attachment = new Attachment(buffer, `train_info_${info.route_name}_${moment().format('HHmmss')}.png`);
         await mes.channel.send('', attachment);
     }
