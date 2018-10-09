@@ -22,6 +22,17 @@ export interface TrainInfo {
 
 export const trainInfos: TrainInfo[] = [
     {
+        route_name: 'seibu_shinjuku',
+        descriiption: '西武新宿線',
+        url: 'https://transit.yahoo.co.jp/traininfo/detail/86/0/',
+        selector: 'div #mdServiceStatus',
+        paddingTop: 80,
+        paddingLeft: 5,
+        paddingRight: 5,
+        paddingBottom: 400,
+        delete_selector: 'div .pos-im'
+    },
+    {
         route_name: 'yamanote',
         descriiption: '山手線',
         url: 'https://transit.yahoo.co.jp/traininfo/detail/21/0/',
@@ -36,17 +47,6 @@ export const trainInfos: TrainInfo[] = [
         route_name: 'tokyu_meguro',
         descriiption: '東急目黒線',
         url: 'https://transit.yahoo.co.jp/traininfo/detail/113/0/',
-        selector: 'div #mdServiceStatus',
-        paddingTop: 80,
-        paddingLeft: 5,
-        paddingRight: 5,
-        paddingBottom: 400,
-        delete_selector: 'div .pos-im'
-    },
-    {
-        route_name: 'seibu_shinjuku',
-        descriiption: '西武新宿線',
-        url: 'https://transit.yahoo.co.jp/traininfo/detail/86/0/',
         selector: 'div #mdServiceStatus',
         paddingTop: 80,
         paddingLeft: 5,

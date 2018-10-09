@@ -31,7 +31,7 @@ export const route = (mes: Message): void => {
         if (args[1] && args[1] === 'all') {
             bot.sendKantoTrainInfo(mes);
         } else {
-            bot.sendMyTrainInfo(mes);
+            bot.sendMyTrainInfo(mes, args[1]);
         }
     }
 };
