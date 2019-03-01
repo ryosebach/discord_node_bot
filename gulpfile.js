@@ -12,7 +12,7 @@ gulp.task('build', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch('src/server/app/**/*.ts', { cwd: './' }, ['build'])
+    gulp.watch('src/server/app/**/*.ts', { cwd: './' }, gulp.task('build'));
 });
 
 const srcBuild = function () {
@@ -29,4 +29,4 @@ const srcBuild = function () {
     ]);
 };
 
-gulp.task('default', ['build']);
+gulp.task('default', gulp.series('build'));
