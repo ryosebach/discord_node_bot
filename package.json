@@ -22,7 +22,7 @@
     "gulp-typescript": "^5.0.0-alpha.3",
     "log4js": "^3.0.5",
     "node-fetch": "^2.2.0",
-    "npm": "^6.1.0",
+    "npm": "^6.8.0",
     "path": "^0.12.7",
     "puppeteer": "^1.8.0",
     "sqlite": "^2.9.1",
