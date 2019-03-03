@@ -9,6 +9,7 @@ import * as moment from 'moment';
 
 import Puppeteer from 'server/app/middleware/puppeteer';
 import * as cheerio from 'server/app/services/cheerio';
+import * as lang from 'server/app/utils/lang';
 import * as yahooWeather from 'server/app/utils/yahooServices';
 
 const logger = log4js.getLogger('console');
@@ -70,4 +71,13 @@ export const sendMyTrainInfo = async (mes: Message, arg?: string): Promise<void>
         const attachment = new Attachment(buffer, `train_info_${info.route_name}_${moment().format('HHmmss')}.png`);
         await mes.channel.send('', attachment);
     }
+};
+
+export const sendHelp = async (mes: Message): Promise<void> => {
+    mes.delete();
+    // const helpMes = `\`Nyanko bot  help!!!\`\n**!weather** : \n**!rc** : \n**!train** :`;
+    const helpMes = lang.textByLocale('ja', 'all');
+    mes.channel.send(helpMes);
+    await new Promise((r: () => void) => setTimeout(r, 10000));
+    clearBotMessage(mes.channel as TextChannel, null, ':information_desk_person:');
 };
