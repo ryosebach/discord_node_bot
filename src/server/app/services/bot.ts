@@ -10,7 +10,7 @@ import * as moment from 'moment';
 import Puppeteer from 'server/app/middleware/puppeteer';
 import * as cheerio from 'server/app/services/cheerio';
 import * as lang from 'server/app/utils/lang';
-import * as yahooWeather from 'server/app/utils/yahooServices';
+import * as yahooService from 'server/app/utils/yahooServices';
 
 const logger = log4js.getLogger('console');
 
@@ -45,7 +45,7 @@ export const sendRainCloudGif = async (mes: Message): Promise<void> => {
     const rainCloudInfo = mes.content.replace(/( |　)+/g, ' ');
     const rainCloudInfos = rainCloudInfo.split(' ');
     await clearBotMessage(mes.channel as TextChannel, 'rain_cloud');
-    const url = yahooWeather.rainCloudUrl[rainCloudInfos[1] ? rainCloudInfos[1] : 'kanto'];
+    const url = yahooService.rainCloudUrl[rainCloudInfos[1] ? rainCloudInfos[1] : 'kanto'];
     const buffer = await cheerio.fetchRainCloudRadorGif(url);
     const attachment = new Attachment(buffer, `rain_cloud-${moment().format('HHmmss')}.gif`);
     await mes.delete();
@@ -63,7 +63,7 @@ export const sendKantoTrainInfo = async (mes: Message): Promise<void> => {
 export const sendMyTrainInfo = async (mes: Message, arg?: string): Promise<void> => {
     await clearBotMessage(mes.channel as TextChannel, 'train_info');
     mes.delete();
-    for (const info of yahooWeather.trainInfos) {
+    for (const info of yahooService.trainInfos) {
         if (arg && !info.route_name.match(new RegExp(arg))) {
             continue;
         }
