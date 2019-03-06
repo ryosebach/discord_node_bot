@@ -12,8 +12,6 @@ import * as cheerio from 'server/app/services/cheerio';
 import * as lang from 'server/app/utils/lang';
 import * as yahooService from 'server/app/utils/yahooServices';
 
-const logger = log4js.getLogger('console');
-
 export const sendHealth = async (mes: Message): Promise<void> => {
     mes.delete();
     mes.channel.send('Runnning');
@@ -75,7 +73,6 @@ export const sendMyTrainInfo = async (mes: Message, arg?: string): Promise<void>
 
 export const sendHelp = async (mes: Message): Promise<void> => {
     mes.delete();
-    // const helpMes = `\`Nyanko bot  help!!!\`\n**!weather** : \n**!rc** : \n**!train** :`;
     const helpMes = lang.textByLocale('ja', 'all');
     mes.channel.send(helpMes);
     await new Promise((r: () => void) => setTimeout(r, 10000));
