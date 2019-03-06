@@ -21,4 +21,5 @@ export const textByLocale = (locale: string, phrase: Phrase, args?: Object): str
 };
 
 export type Phrase =
-  '';
+  'all'
+| '';

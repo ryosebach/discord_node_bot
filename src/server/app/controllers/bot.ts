@@ -34,4 +34,8 @@ export const route = (mes: Message): void => {
             bot.sendMyTrainInfo(mes, args[1]);
         }
     }
+
+    if (command === '!help') {
+      bot.sendHelp(mes);
+    }
 };
