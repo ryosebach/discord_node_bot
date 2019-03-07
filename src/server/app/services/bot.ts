@@ -9,9 +9,8 @@ import * as moment from 'moment';
 
 import Puppeteer from 'server/app/middleware/puppeteer';
 import * as cheerio from 'server/app/services/cheerio';
-import * as yahooWeather from 'server/app/utils/yahooServices';
-
-const logger = log4js.getLogger('console');
+import * as lang from 'server/app/utils/lang';
+import * as yahooService from 'server/app/utils/yahooServices';
 
 export const sendHealth = async (mes: Message): Promise<void> => {
     mes.delete();
@@ -22,13 +21,13 @@ export const sendHealth = async (mes: Message): Promise<void> => {
 
 const clearBotMessage = async (channel: TextChannel, name?: string, content?: string): Promise<void> => {
     const messages = await channel.fetchMessages({ limit: 10});
-    for (const val of messages.array()) {
-        if (val.author.username !== 'Nyanko' ||
-            (name && !val.attachments.first().filename.match(new RegExp(`${name}`))) ||
-            (content && !val.content.match(new RegExp(content)))) {
+    for (const message of messages.array()) {
+        if (message.author.username !== 'Nyanko' ||
+            (name && !message.attachments.first().filename.match(new RegExp(`${name}`))) ||
+            (content && !message.content.match(new RegExp(content)))) {
             continue;
         }
-        val.delete();
+        message.delete();
     }
 };
 
@@ -44,7 +43,7 @@ export const sendRainCloudGif = async (mes: Message): Promise<void> => {
     const rainCloudInfo = mes.content.replace(/( |　)+/g, ' ');
     const rainCloudInfos = rainCloudInfo.split(' ');
     await clearBotMessage(mes.channel as TextChannel, 'rain_cloud');
-    const url = yahooWeather.rainCloudUrl[rainCloudInfos[1] ? rainCloudInfos[1] : 'kanto'];
+    const url = yahooService.rainCloudUrl[rainCloudInfos[1] ? rainCloudInfos[1] : 'kanto'];
     const buffer = await cheerio.fetchRainCloudRadorGif(url);
     const attachment = new Attachment(buffer, `rain_cloud-${moment().format('HHmmss')}.gif`);
     await mes.delete();
@@ -62,7 +61,7 @@ export const sendKantoTrainInfo = async (mes: Message): Promise<void> => {
 export const sendMyTrainInfo = async (mes: Message, arg?: string): Promise<void> => {
     await clearBotMessage(mes.channel as TextChannel, 'train_info');
     mes.delete();
-    for (const info of yahooWeather.trainInfos) {
+    for (const info of yahooService.trainInfos) {
         if (arg && !info.route_name.match(new RegExp(arg))) {
             continue;
         }
@@ -70,4 +69,12 @@ export const sendMyTrainInfo = async (mes: Message, arg?: string): Promise<void>
         const attachment = new Attachment(buffer, `train_info_${info.route_name}_${moment().format('HHmmss')}.png`);
         await mes.channel.send('', attachment);
     }
+};
+
+export const sendHelp = async (mes: Message): Promise<void> => {
+    mes.delete();
+    const helpMes = lang.textByLocale('ja', 'all');
+    mes.channel.send(helpMes);
+    await new Promise((r: () => void) => setTimeout(r, 10000));
+    clearBotMessage(mes.channel as TextChannel, null, ':information_desk_person:');
 };
