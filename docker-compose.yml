@@ -1,0 +1,15 @@
+version: "2"
+services:
+  bot:
+    build: .
+    environment:
+      - NODE_ENV=local
+    volumes:
+      - .:/opt/discord-bot
+      - /opt/discord-bot/node_modules
+    ports:
+      - "3001:3000"
+    command:
+      - npm
+      - run
+      - dev
