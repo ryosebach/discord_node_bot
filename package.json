@@ -40,7 +40,7 @@
     "tslint-microsoft-contrib": "^5.2.1"
   },
   "scripts": {
-    "start": "pm2 start ./dist/server/app/app.js -n bot",
+    "start": "pm2 start ./dist/server/app/app.js -n bot --log-date-format 'DD-MM HH:mm:ss.SSS'",
     "build": "gulp build",
     "watch": "gulp watch",
     "stop": "pm2 del bot",
