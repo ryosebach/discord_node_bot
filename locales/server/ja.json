@@ -1,3 +1,3 @@
 {
-  "all" : ":information_desk_person: `Nyanko bot  help!!!` :information_desk_person:\n**!weather [location]** : 本日と明日の天気情報をYahoo天気より取得します。\n**!rc [location]** : Yahoo天気より雨雲の動きを取得します\n**!train** (!tr) : 電車の遅延情報を取得します。"
+  "all" : ":information_desk_person: `Nyanko bot  help!!!` :information_desk_person:\n**!weather [location]** : 本日と明日の天気情報をYahoo天気より取得します。\n**!rc [location]** : Yahoo天気より雨雲の動きを取得します\n**!train** (!tr) : 電車の遅延情報を取得します。\n**!fsb** : Fortniteのサーバの動作状況位の監視を行う。"
 }
