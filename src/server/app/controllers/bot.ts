@@ -35,6 +35,10 @@ export const route = (mes: Message): void => {
         }
     }
 
+    if (command  === '!fsb') {
+      bot.sendFortniteStatus(mes);
+    }
+
     if (command === '!help') {
       bot.sendHelp(mes);
     }

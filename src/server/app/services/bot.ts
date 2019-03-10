@@ -9,6 +9,7 @@ import * as moment from 'moment';
 
 import Puppeteer from 'server/app/middleware/puppeteer';
 import * as cheerio from 'server/app/services/cheerio';
+import FortniteStatus from 'server/app/utils/fortniteStatus';
 import * as lang from 'server/app/utils/lang';
 import * as yahooService from 'server/app/utils/yahooServices';
 
@@ -69,6 +70,12 @@ export const sendMyTrainInfo = async (mes: Message, arg?: string): Promise<void>
         const attachment = new Attachment(buffer, `train_info_${info.route_name}_${moment().format('HHmmss')}.png`);
         await mes.channel.send('', attachment);
     }
+};
+
+export const sendFortniteStatus = async (mes: Message): Promise<void> => {
+  mes.delete();
+  clearBotMessage(mes.channel as TextChannel, null, 'メンテ終わり');
+  FortniteStatus.checkStatusForChannel(mes.channel as TextChannel);
 };
 
 export const sendHelp = async (mes: Message): Promise<void> => {
