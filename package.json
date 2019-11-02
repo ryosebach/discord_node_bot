@@ -24,9 +24,8 @@
     "i18n": "^0.8.3",
     "log4js": "^3.0.5",
     "node-fetch": "^2.2.0",
-    "npm": "^6.8.0",
     "path": "^0.12.7",
-    "puppeteer": "^1.8.0",
+    "puppeteer": "^1.20.0",
     "tslint": "^5.11.0",
     "typescript": "^3.0.3",
     "vinyl-fs": "^3.0.3"
